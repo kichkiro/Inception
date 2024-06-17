@@ -1,7 +1,19 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Dockerfile                                         :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: kichkiro <kichkiro@student.42firenze.it    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/06/17 10:13:18 by kichkiro          #+#    #+#              #
+#    Updated: 2024/06/17 14:58:32 by kichkiro         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 FROM debian:oldstable
 
 RUN apt-get update \
-    && apt-get install -y php php-mysql wget unzip \
+    && apt-get install -y php-fpm php-cli wget unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -17,7 +29,6 @@ RUN chown -R www-data:www-data /var/www/html
 
 # COPY ./php.ini /usr/local/etc/php/
 
-# EXPOSE 9000
+EXPOSE 9000
 
-# CMD ["/usr/sbin/php-fpm"]
-
+CMD ["php-fpm7.4"]
