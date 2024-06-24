@@ -4,49 +4,50 @@ services:
         build:
             context: ./requirements/nginx
             dockerfile: Dockerfile
-        image: nginx:42
         restart: always
         ports:
             - "80:80"
         depends_on:
             - wordpress
-        # volumes:
-        #     - wordpress_vol:/path/to/wordpress
+        volumes:
+            - wordpress_vol:/var/www/html
         networks:
             inception_net:
-                ipv4_address: 172.42.0.1
-        env_file:
-            - .env
+                ipv4_address: 10.0.0.1
     mariadb:
         container_name: mariadb
         build:
             context: ./requirements/mariadb
             dockerfile: Dockerfile
-        image: mariadb:42
         restart: always
-        # ports:
-        #     - "9000:9000"
-        # volumes:
-        #     - db_vol:/path/to/mariadb/data
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        volumes:
+            - db_vol:/var/lib/mysql
         networks:
             inception_net:
-                ipv4_address: 172.42.0.2
+                ipv4_address: 10.0.0.2
     wordpress:
         container_name: wordpress
         build:
             context: ./requirements/wordpress
             dockerfile: Dockerfile
-        image: wordpress:42
         restart: always
-        # ports:
-            # - "3306:3306"
+        environment:
+            WORDPRESS_DB_HOST: db:3306
+            WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+            WORDPRESS_DB_USER: ${MYSQL_USER}
+            WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
         depends_on:
             - mariadb
-        # volumes:
-        #     - wordpress_vol:/path/to/wordpress
+        volumes:
+            - wordpress_vol:/var/www/html
         networks:
             inception_net:
-                ipv4_address: 172.42.0.3
+                ipv4_address: 10.0.0.3
 
 volumes:
     db_vol: {}
@@ -59,5 +60,5 @@ networks:
         ipam:
             driver: default
             config:
-                - subnet: 172.42.0.0/24
-                  gateway: 172.42.0.254
+                - subnet: 10.0.0.0/8
+                  gateway: 10.255.255.254

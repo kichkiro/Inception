@@ -6,7 +6,7 @@
 #    By: kichkiro <kichkiro@student.42firenze.it    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/12 14:53:55 by kichkiro          #+#    #+#              #
-#    Updated: 2024/06/17 12:40:35 by kichkiro         ###   ########.fr        #
+#    Updated: 2024/06/24 14:51:07 by kichkiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,28 +20,26 @@
 all: banner up
 
 up: banner
-	@docker compose -f ./srcs/docker-compose.yml up -d
+	docker compose -f ./srcs/docker-compose.yml up -d
 
 down: banner
-	@docker compose -f ./srcs/docker-compose.yml down
+	docker compose -f ./srcs/docker-compose.yml down
 
 start: banner
-	@docker compose -f ./srcs/docker-compose.yml start
+	docker compose -f ./srcs/docker-compose.yml start
 
 stop: banner
-	@docker compose -f ./srcs/docker-compose.yml stop
-
-re: banner
-	@docker compose -f scrs/docker-compose.yml up -d --build
+	docker compose -f ./srcs/docker-compose.yml stop
 
 clean: banner
-	@docker stop $$(docker ps -qa); \
-	docker rm $$(docker ps -qa); \
-	docker rmi -f $$(docker images -qa); \
-	docker volume rm $$(docker volume ls -q); \
-	docker network rm $$(docker network ls -q); \
-
-# Style ----------------------------------------------------------------------->
+	echo "Stopping all containers..."
+	docker rm -f $$(docker ps -qa)
+	echo "\nRemoving all images..."
+	docker rmi -f $$(docker images -qa)
+	echo "\nRemoving all volumes..."
+	docker volume rm $$(docker volume ls -q)
+	echo "\nRemoving network..."
+	docker network rm inception_net
 
 banner:
 	${info }
