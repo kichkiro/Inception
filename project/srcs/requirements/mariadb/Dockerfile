@@ -6,29 +6,11 @@
 #    By: kichkiro <kichkiro@student.42firenze.it    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/17 10:13:07 by kichkiro          #+#    #+#              #
-#    Updated: 2024/06/24 12:45:32 by kichkiro         ###   ########.fr        #
+#    Updated: 2024/06/25 15:20:17 by kichkiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-FROM debian:oldstable
-
-RUN apt-get update \
-    && apt-get install -y mariadb-server
-
-COPY tools/init_db.sh /tools.d/init_db.sh
-
-RUN chmod +x /tools.d/init_db.sh
-
-RUN sed -i 's/^\(bind-address\s.*\)/# \1/' /etc/mysql/mariadb.conf.d/50-server.cnf
-
-EXPOSE 3306
-
-CMD ["mysqld_safe"]
-
-
-
-
-
+# FROM debian:oldstable
 
 # RUN apt-get update \ 
 #     && apt-get install -y mariadb-server \
@@ -57,3 +39,16 @@ CMD ["mysqld_safe"]
 # ENTRYPOINT  ["bash", "mariadb.sh"]
 
 # CMD ["/usr/bin/mysqld", "--skip-log-error"]
+
+
+FROM debian:oldstable
+
+COPY tools/init_mariadb.sh /tmp/init_mariadb.sh
+
+RUN chmod +x /tmp/init_mariadb.sh && /tmp/init_mariadb.sh
+
+COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+
+EXPOSE 3306
+
+CMD ["mysqld_safe"]
