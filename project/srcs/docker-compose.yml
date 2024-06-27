@@ -4,9 +4,10 @@ services:
         build:
             context: ./requirements/nginx
             dockerfile: Dockerfile
+        image: nginx:42
         restart: always
         ports:
-            - "80:80"
+            - "443:443"
         depends_on:
             - wordpress
         volumes:
@@ -22,10 +23,10 @@ services:
             context: ./requirements/wordpress
             dockerfile: Dockerfile
             args:
-                WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-                WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
-                WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-                WORDPRESS_DB_PASS: ${WORDPRESS_DB_PASS}
+                MARIADB_DB_NAME: ${MARIADB_DB_NAME}
+                MARIADB_DB_USER: ${MARIADB_DB_USER}
+                MARIADB_DB_PASS: ${MARIADB_DB_PASS}
+        image: wordpress:42
         restart: always
         depends_on:
             - mariadb
@@ -46,6 +47,7 @@ services:
                 MARIADB_DB_NAME: ${MARIADB_DB_NAME}
                 MARIADB_DB_USER: ${MARIADB_DB_USER}
                 MARIADB_DB_PASS: ${MARIADB_DB_PASS}
+        image: mariadb:42
         restart: always
         volumes:
             - db_vol:/var/lib/mysql
@@ -54,8 +56,20 @@ services:
                 ipv4_address: 10.0.0.3
 
 volumes:
-    db_vol: {}
-    wordpress_vol: {}
+  wordpress_vol:
+    driver: local
+    name: wordpress_vol
+    driver_opts:
+      type: none
+      o: bind
+      device: ${HOME}/data/wordpress
+  db_vol:
+    driver: local
+    name: db_vol
+    driver_opts:
+      type: none
+      o: bind
+      device: ${HOME}/data/db
 
 networks:
     inception_net:

@@ -6,7 +6,7 @@
 #    By: kichkiro <kichkiro@student.42firenze.it    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/12 14:53:55 by kichkiro          #+#    #+#              #
-#    Updated: 2024/06/25 15:08:17 by kichkiro         ###   ########.fr        #
+#    Updated: 2024/06/27 15:11:27 by kichkiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,17 +32,23 @@ stop: banner
 	docker compose -f ./srcs/docker-compose.yml stop
 
 clean: banner
-	echo "Stopping all containers..."
-	docker rm -f $$(docker ps -qa)
+	echo "Removing all containers..."
+	-docker rm -f $$(docker ps -qa)
 	echo "\nRemoving all images..."
-	docker rmi -f $$(docker images -qa)
+	-docker rmi -f $$(docker images -qa)
 	echo "\nRemoving all volumes..."
-	docker volume rm $$(docker volume ls -q)
+	-docker volume rm $$(docker volume ls -q)
 	echo "\nRemoving network..."
-	docker network rm inception_net
+	-docker network rm $$(docker network ls -q) 2>/dev/null
 
 banner:
 	${info }
-
+	${info ██╗███╗   ██╗ ██████╗███████╗██████╗ ████████╗██╗ ██████╗ ███╗   ██╗}
+	${info ██║████╗  ██║██╔════╝██╔════╝██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║}
+	${info ██║██╔██╗ ██║██║     █████╗  ██████╔╝   ██║   ██║██║   ██║██╔██╗ ██║}
+	${info ██║██║╚██╗██║██║     ██╔══╝  ██╔═══╝    ██║   ██║██║   ██║██║╚██╗██║}
+	${info ██║██║ ╚████║╚██████╗███████╗██║        ██║   ██║╚██████╔╝██║ ╚████║}
+	${info ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝╚═╝        ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝}
+	${info }
 
 # ------------------------------------------------------------------------------

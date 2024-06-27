@@ -1,29 +1,17 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Dockerfile                                         :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: kichkiro <kichkiro@student.42firenze.it    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/06/17 10:13:18 by kichkiro          #+#    #+#              #
-#    Updated: 2024/06/26 15:07:31 by kichkiro         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 FROM debian:oldstable
 
-ARG WORDPRESS_DB_HOST
-ARG WORDPRESS_DB_NAME
-ARG WORDPRESS_DB_USER
-ARG WORDPRESS_DB_PASS
+ARG MARIADB_DB_NAME
+ARG MARIADB_DB_USER
+ARG MARIADB_DB_PASS
 
 COPY tools/init_wordpress.sh /tmp/init_wordpress.sh
 
 RUN chmod +x /tmp/init_wordpress.sh && /tmp/init_wordpress.sh
 
-COPY conf/php-fpm.conf /etc/php/7.4/fpm/php-fpm.conf
-COPY conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 COPY conf/wp-config.php /var/www/html/wp-config.php
+COPY conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+
+RUN chown -R www-data:www-data /var/www/html && chmod -R 700 /var/www/html
 
 EXPOSE 9000
 
