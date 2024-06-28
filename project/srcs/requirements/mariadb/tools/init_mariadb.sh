@@ -2,7 +2,6 @@
 
 set -e
 
-# Install MariaDB ------------------------------------------------------------>
 apt-get update
 apt-get install -y mariadb-server
 apt-get clean
@@ -12,7 +11,6 @@ mkdir -p /var/run/mysqld
 chown -R mysql:mysql /var/run/mysqld
 chmod 700 /var/run/mysqld
 
-# Config MariaDB ------------------------------------------------------------->
 service mariadb start
 
 echo "DELETE FROM mysql.user WHERE User='';" | mariadb -u root
@@ -26,6 +24,4 @@ echo "\
     TO '${MARIADB_DB_USER}'@'10.0.0.2' \
     IDENTIFIED BY '${MARIADB_DB_PASS}';" \
     | mariadb -u root
-echo "ALTER USER 'root'@'%' IDENTIFIED BY '${MARIADB_ROOT_PASS}';FLUSH PRIVILEGES;" | mariadb -u root
-
-# service mariadb stop
+echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '${MARIADB_ROOT_PASS}';FLUSH PRIVILEGES;" | mariadb -u root

@@ -14,4 +14,4 @@ TODO
 [x] Aggiungere supporto per SSL in Nginx
 [x] Risolvere problema tag Latest per le immagini docker custom e nome immagine uguale a nome servizio
 [ ] Aggiungere persistenza, quindi controlli nei script se gia esistono dati e configurazioni
-[ ] Due utenti per db wordpress, di cui uno amministratore
+[x] Due utenti per db wordpress, di cui uno amministratore
